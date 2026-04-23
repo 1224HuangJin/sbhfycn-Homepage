@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+  @apply transition-colors duration-300;
+  /* Basic background gradient for light mode */
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  background-attachment: fixed;
+}
+
+.dark body {
+  /* Basic background gradient for dark mode */
+  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+  background-attachment: fixed;
+}
+
+/* Glassmorphism utilities */
+.glass, .glass-card {
+  @apply relative overflow-hidden;
+}
+
+/* Base static styles for glass */
+.glass {
+  @apply bg-white/20 backdrop-blur-2xl border border-white/40 shadow-[0_8px_30px_rgb(0,0,0,0.12)];
+}
+.dark .glass {
+  @apply bg-slate-900/30 backdrop-blur-2xl border border-slate-700/50 shadow-black/40;
+}
+
+.glass-card {
+  @apply bg-white/10 backdrop-blur-xl border border-white/20 transition-transform duration-300 rounded-2xl shadow-sm hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)];
+}
+.dark .glass-card {
+  @apply bg-slate-800/30 backdrop-blur-xl border border-slate-700/40 transition-transform duration-300 rounded-2xl shadow-black/20 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)];
+}
+
+/* Background Image Animation */
+@keyframes bgDrift {
+  0% {
+    translate: 0 0;
+  }
+  33% {
+    translate: 1.5% 1.5%;
+  }
+  66% {
+    translate: -1.5% 0.5%;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+.animate-bg-drift {
+  animation: bgDrift 30s ease-in-out infinite;
+}
+
+/* JS-driven Liquid Glass Glow Overlay */
+.glass::before, .glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1; /* Ensure it stays on top of the background but below text if possible, though pointer-events-none handles interaction */
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.45),
+    rgba(255, 255, 255, 0) 40%
+  );
+}
+.dark .glass::before, .dark .glass-card::before {
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0) 40%
+  );
+}
+
+.glass:hover::before, .glass-card:hover::before {
+  opacity: 1;
+}

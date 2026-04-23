@@ -1,0 +1,35 @@
+---
+import type { LinkData } from '../config';
+
+export interface Props {
+  link: LinkData;
+}
+
+const { link } = Astro.props;
+---
+
+<a href={link.url} target="_blank" rel="noopener noreferrer" class="glass-card p-4 block h-full group transition-all duration-500 ease-out">
+  <div class="flex items-center gap-4 h-full">
+    {(link.icon || link.pic || link.fa) && (
+      <div class="flex-shrink-0 w-12 h-12 flex items-center justify-center text-3xl text-slate-700 dark:text-slate-200 group-hover:text-blue-500 dark:group-hover:text-blue-400 group-hover:scale-110 transition-all duration-300 overflow-hidden">
+        {link.pic ? (
+          <img src={link.pic} alt={link.title} class="w-full h-full object-cover rounded" />
+        ) : link.fa ? (
+          <i class={link.fa}></i>
+        ) : (
+          link.icon
+        )}
+      </div>
+    )}
+    <div class="flex-1 min-w-0">
+      <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-1 truncate group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors">
+        {link.title}
+      </h3>
+      {link.description && (
+        <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2">
+          {link.description}
+        </p>
+      )}
+    </div>
+  </div>
+</a>

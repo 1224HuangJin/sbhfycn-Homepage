@@ -1,0 +1,218 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import { siteConfig } from '../config';
+---
+
+<div class="glass rounded-3xl p-6 flex flex-col items-center h-auto relative transition-all duration-500">
+  <div class="absolute top-4 right-4 z-10 transition-all duration-500 flex gap-2">
+    {siteConfig.blurConfig.showToggle && (
+      <button 
+        id="blur-toggle" 
+        class="w-10 h-10 rounded-full bg-white/30 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-slate-700/50 shadow-sm flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-slate-700/70 transition-all hover:scale-110"
+        aria-label="Toggle Blur"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-3-9c-2.316 0-4.481 1.095-5.918 2.879L4 7h4V3.882A7.973 7.973 0 0112 3a8.032 8.032 0 013.918.995l-1.92 2.89H18V3a7.977 7.977 0 00-6-3zM3 12c0-2.316 1.095-4.481 2.879-5.918L7 8v4H3.882A7.973 7.973 0 013 12a8.032 8.032 0 011.995 3.918l2.89-1.92V18h-4.882C2.095 16.481 1 14.316 1 12z" />
+          <path class="blur-icon-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12c0 2.316-1.095 4.481-2.879 5.918L17 16v-4h3.118A7.973 7.973 0 0121 12zm-9 9c2.316 0 4.481-1.095 5.918-2.879L18 17h-4v3.118A7.973 7.973 0 0112 21z" />
+          <circle cx="12" cy="12" r="9" class="blur-slash hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke-dasharray="1 4" />
+        </svg>
+      </button>
+    )}
+    <ThemeToggle />
+  </div>
+
+  <div class="flex flex-col items-center mt-6 transition-all duration-500">
+    <div class="avatar-container w-24 h-24 rounded-full overflow-hidden mb-4 border-4 border-white/50 shadow-lg">
+      <img src={siteConfig.profile.avatarUrl} alt="Avatar" class="w-full h-full object-cover transition-transform duration-700 ease-in-out hover:rotate-[360deg]" />
+    </div>
+    
+    <h1 id="profile-name" class="text-3xl font-black tracking-tight mb-1 text-slate-900 dark:text-white" data-names={JSON.stringify(siteConfig.profile.names || [])} data-typewriter={String(siteConfig.profile.typewriterName)}>
+      {siteConfig.profile.names ? siteConfig.profile.names[0] : ""}
+    </h1>
+    <p id="profile-role" class="text-slate-600 dark:text-slate-400 text-center font-normal mb-3 text-base" data-roles={JSON.stringify(siteConfig.profile.roles || [])} data-typewriter={String(siteConfig.profile.typewriterRole)}>
+      {siteConfig.profile.roles ? siteConfig.profile.roles[0] : ""}
+    </p>
+    <div class="w-10 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mb-4"></div>
+    <p class="text-slate-500 dark:text-slate-300 text-center leading-relaxed text-sm prose prose-a:font-semibold prose-a:no-underline [&_a]:text-blue-500 dark:[&_a]:text-blue-400 [&_a:hover]:underline [&_a:hover]:text-blue-600 dark:[&_a:hover]:text-blue-300 [&_a]:transition-colors">
+      <Fragment set:html={siteConfig.profile.bio} />
+    </p>
+  </div>
+
+  <!-- Internal/Other Site Links -->
+  {(siteConfig.internalLinks && siteConfig.internalLinks.length > 0) && (
+    <div class="w-full mt-6 pt-6 border-t border-white/20 dark:border-slate-700/50 transition-all duration-500">
+      <div class="text-sm font-bold text-slate-700 dark:text-slate-200 tracking-wider text-center mb-4">
+        置顶链接
+      </div>
+      <div class="w-full flex flex-col gap-3">
+        {siteConfig.internalLinks.map((link) => (
+          <a href={link.url} target={link.url.startsWith('http') ? '_blank' : '_self'} class="w-full glass-card px-4 py-3 flex items-center justify-center gap-2 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors group">
+            <span class="text-lg group-hover:scale-125 transition-transform duration-300 select-none flex items-center justify-center w-6 h-6 overflow-hidden">
+              {link.pic ? (
+                <img src={link.pic} alt={link.name} class="w-full h-full object-cover rounded" />
+              ) : link.fa ? (
+                <i class={link.fa}></i>
+              ) : (
+                <Fragment set:html={link.icon} />
+              )}
+            </span>
+            <span class="font-medium text-sm">{link.name}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <div class="mt-6 flex gap-4 w-full justify-center">
+    <!-- Social Links -->
+    {siteConfig.socialLinks.map((social) => (
+      <a href={social.url} target="_blank" rel="noopener noreferrer" aria-label={social.name} class="w-10 h-10 rounded-full glass flex items-center justify-center hover:scale-110 transition-transform overflow-hidden relative">
+        {social.pic ? (
+          <img src={social.pic} alt={social.name} class="w-full h-full object-cover" />
+        ) : social.fa ? (
+          <i class={`text-lg ${social.fa}`}></i>
+        ) : social.icon ? (
+          <Fragment set:html={social.icon} />
+        ) : null}
+      </a>
+    ))}
+  </div>
+</div>
+
+<script define:vars={{ 
+  typewriterCursor: siteConfig.profile.typewriterCursor || '_',
+  enableHoverZoom: siteConfig.blurConfig.enableHoverZoom ?? true,
+  hoverZoomScale: siteConfig.blurConfig.hoverZoomScale || '1.15',
+  hoverZoomDelay: siteConfig.blurConfig.hoverZoomDelay ?? 400,
+  defaultBgScale: siteConfig.blurConfig.bgScale || '1.05'
+}}>
+  const toggleBtn = document.getElementById('blur-toggle');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      // Calling the global function defined in Layout.astro
+      if (window.toggleBlur) {
+        window.toggleBlur();
+        updateToggleIcon();
+      }
+    });
+
+    // Update icon appearance depending on body class state
+    function updateToggleIcon() {
+      const isCurrentlyDisabled = document.body.classList.contains('disable-blur');
+      if (isCurrentlyDisabled) {
+        toggleBtn.style.opacity = '0.5';
+      } else {
+        toggleBtn.style.opacity = '1';
+      }
+    }
+    
+    // Initial check
+    updateToggleIcon();
+  }
+  
+  // ------------- Typewriter Effect Logic -------------
+  function setupTypewriter(elementId, strings, enabled) {
+    const el = document.getElementById(elementId);
+    if (!el || !enabled || !strings || strings.length === 0) return;
+    
+    let i = 0; // current string index
+    let j = 0; // current char index
+    let isDeleting = false;
+    let text = '';
+    
+    function type() {
+      const currentString = strings[i % strings.length];
+      
+      if (isDeleting) {
+        text = currentString.substring(0, j - 1);
+        j--;
+      } else {
+        text = currentString.substring(0, j + 1);
+        j++;
+      }
+      
+      // Inject cursor next to text
+      el.innerHTML = text + `<span class="typewriter-cursor relative inline-block text-current opacity-100 animate-blink -ml-1">${typewriterCursor}</span>`;
+      
+      let typeSpeed = isDeleting ? 40 : 120; // typing is slower than deleting
+      
+      if (!isDeleting && j === currentString.length) {
+        typeSpeed = 2500; // pause at the end of the word
+        if (strings.length > 1) {
+            isDeleting = true;
+        } else {
+            return; // stop typing if only one string, cursor keeps blinking
+        }
+      } else if (isDeleting && j === 0) {
+        isDeleting = false;
+        i++;
+        typeSpeed = 500; // pause before typing next word
+      }
+      
+      setTimeout(type, typeSpeed);
+    }
+    
+    type();
+  }
+
+  const nameEl = document.getElementById('profile-name');
+  if (nameEl) {
+    const names = JSON.parse(nameEl.getAttribute('data-names') || '[]');
+    const enabled = nameEl.getAttribute('data-typewriter') === 'true';
+    if (enabled && names.length > 0) {
+       nameEl.innerHTML = '';
+       setupTypewriter('profile-name', names, true);
+    }
+  }
+  
+  const roleEl = document.getElementById('profile-role');
+  if (roleEl) {
+    const roles = JSON.parse(roleEl.getAttribute('data-roles') || '[]');
+    const enabled = roleEl.getAttribute('data-typewriter') === 'true';
+    if (enabled && roles.length > 0) {
+       roleEl.innerHTML = '';
+       setupTypewriter('profile-role', roles, true);
+    }
+  }
+
+  // ------------- Hover Background Zoom Effect -------------
+  if (enableHoverZoom) {
+    const bgElement = document.getElementById('dynamic-background');
+    let zoomTimer;
+
+    // Use event delegation onto document.body to ensure all links and avatar container are properly captured even if generated dynamically
+    document.body.addEventListener('mouseover', (e) => {
+      const targetElement = e.target.closest('a, .avatar-container');
+      if (targetElement) {
+        clearTimeout(zoomTimer);
+        zoomTimer = setTimeout(() => {
+          if (bgElement) {
+            // Set css custom property so it overcomes any !important modifiers from the blur toggle state
+            bgElement.style.setProperty('--dynamic-scale', hoverZoomScale);
+          }
+        }, hoverZoomDelay); 
+      }
+    });
+
+    document.body.addEventListener('mouseout', (e) => {
+      const targetElement = e.target.closest('a, .avatar-container');
+      if (targetElement) {
+        clearTimeout(zoomTimer);
+        if (bgElement) {
+          // Remove custom property to revert to normal scaling logic defined in Layout.css
+          bgElement.style.removeProperty('--dynamic-scale');
+        }
+      }
+    });
+  }
+</script>
+
+<style is:global>
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  .animate-blink {
+    animation: blink 1s step-end infinite;
+  }
+</style>
